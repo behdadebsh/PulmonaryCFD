@@ -1,0 +1,214 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Which of the steps to run
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    patched.stl
+    {
+        type triSurfaceMesh;
+        name Bifurcations; 
+
+// First entry in named region in the STL file
+// Second entry is user-defined patch name
+        regions
+        {
+            patch0 {name wall;}
+            patch1 {name outlet1;}
+            patch2 {name outlet2;}
+            patch3 {name outlet3;}
+            patch4 {name outlet4;}
+            patch5 {name inlet;}
+        }
+    }
+
+};
+
+// Settings for the castellatedMesh generation.
+castellatedMeshControls
+{
+    // Refinement parameters
+    maxLocalCells 				100000;
+    maxGlobalCells 				20000000;
+    minRefinementCells 			10;
+    maxLoadUnbalance 			0.10;
+    nCellsBetweenLevels 		2;
+    allowFreeStandingZoneFaces 	true;
+    resolveFeatureAngle 		30;		
+    planarAngle 				30;
+
+
+    // Explicit feature edge refinement
+    features
+    (
+        { file "patched.eMesh"; level 0; }
+    );
+
+    // Surface based refinement
+    refinementSurfaces
+    {
+        Bifurcations
+        {
+            // Global surface-wise min and max refinement level
+            level (0 0);
+
+            // Local surface-wise min and max refinement level
+			// You will need to use the name given in the STL file
+            regions
+			{
+            	patch5				//inlet 
+                { level (1 1); patchInfo { type patch; } }
+
+            	patch1				//outlet1 
+                { level (1 1); patchInfo { type patch; } }
+
+            	patch2				//outlet2
+                { level (1 1); patchInfo { type patch; } }
+
+            	patch3				//outlet3
+                { level (1 1); patchInfo { type patch; } }
+
+            	patch4				//outlet4
+                { level (1 1); patchInfo { type patch; } }
+
+            	patch0	//wall
+                { level (2 2); patchInfo { type wall; } }
+			}
+        }
+    }
+
+
+    // Region-wise refinement
+    refinementRegions
+    {
+        Bifurcations
+        {
+            mode distance;		//distance, inside, outside
+            levels ((1e-4 0));
+        }
+    }
+
+
+    // Mesh selection
+    locationInMesh (-145 -160 -200); 
+
+}
+
+// Settings for the snapping.
+snapControls
+{
+    nSmoothPatch 	3;
+    tolerance 		2.0;
+    nSolveIter 		300;
+    nRelaxIter 		5;
+
+    // Feature snapping
+	nFeatureSnapIter 10;
+
+	implicitFeatureSnap false;
+	explicitFeatureSnap true;
+
+	// Detect features between multiple surfaces
+	// (only for explicitFeatureSnap, default = false)
+	multiRegionFeatureSnap false;
+}
+
+// Settings for the layer addition.
+addLayersControls
+{
+    relativeSizes 		true;
+	expansionRatio 		1.2;
+	finalLayerThickness     1.0;
+	minThickness 		0.5;
+
+    layers
+    {
+        wall { nSurfaceLayers 5; }
+    }
+
+
+    // Advanced settings
+    featureAngle 				130;	
+    slipFeatureAngle 			30;
+
+    nGrow 						0;
+
+    nLayerIter 					50;
+    nRelaxedIter 				20;
+    nRelaxIter 					5;
+
+    nSmoothSurfaceNormals 		1;
+    nSmoothNormals 				3;
+    nSmoothThickness 			10;
+    maxFaceThicknessRatio 		0.5;
+    maxThicknessToMedialRatio 	0.3;
+
+    minMedialAxisAngle 			90;
+    minMedianAxisAngle 			90;
+    nMedialAxisIter           	10;
+
+    nBufferCellsNoExtrude 		0;
+    additionalReporting 		false;
+}
+
+// Generic mesh quality settings. At any undoable phase these determine
+// where to undo.
+meshQualityControls
+{
+    #include "meshQualityDict"
+
+    relaxed
+    {
+        maxNonOrtho 75;
+    }
+
+    //minFlatness 0.5;
+
+    // Advanced
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+
+// Advanced
+debug 0;
+
+//// Debug flags
+debugFlags
+(
+    //mesh            // write intermediate meshes
+    //intersections   // write current mesh intersections as .obj files
+    //featureSeeds    // write information about explicit feature edge refinement
+    //attraction      // write attraction as .obj files
+    //layerInfo       // write information about layers
+);
+
+//// Write flags
+writeFlags
+(
+    //scalarLevels    // write volScalarField with cellLevel for postprocessing
+    //layerSets       // write cellSets, faceSets of faces in layer
+    //layerFields     // write volScalarField for layer coverage
+);
+
+// Merge tolerance. Is fraction of overall bounding box of initial mesh.
+// Note: the write tolerance needs to be higher than this.
+mergeTolerance 1e-6;
+
+// ************************************************************************* //
