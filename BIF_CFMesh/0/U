@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            surfaceNormalFixedValue;
+        refValue           uniform -0.05;
+    }
+
+//=================================================
+// This section for parabolic velocity profile
+
+//    inlet
+//    {
+//        type            codedFixedValue;
+//	value 		uniform (0 0 0);
+//	redirectType	test; // user-defined name
+//
+//	code
+//	#{
+//	const fvPatch& boundaryPatch = this->patch(); 
+//        const vectorField& Cf = boundaryPatch.Cf(); 
+//
+//        vectorField& v = *this;
+//        scalar Uc = 0.05; // centerline velocity, U_max
+//	scalar R = 0.0084; // inlet radius
+//
+//	forAll(Cf,faceI)
+//	{
+//	    scalar x = Cf[faceI].x(), z = Cf[faceI].z(), rSq = (x+0.1486715)*(x+0.1486715) + (z+0.203453)*(z+0.203453);
+//            if ( rSq < R )
+//             {
+//                v[faceI] = vector(0.2255*Uc*(1 - rSq/R/R), 0.9742*Uc*(1 - rSq/R/R), 0);
+//             };
+//            if ( rSq > R )
+//             {
+//               v[faceI] = vector(0, 0, 0);
+//             };
+//	}
+//        #};
+//    }
+//======================================================
+    outlet1
+    {
+        type            zeroGradient;
+    }
+
+    outlet2
+    {
+        type            zeroGradient;
+    }
+
+    outlet3
+    {
+        type            zeroGradient;
+    }
+
+    outlet4
+    {
+        type            zeroGradient;
+    }
+
+    wall
+    {
+        type            noSlip;
+    }
+
+}
+
+// ************************************************************************* //

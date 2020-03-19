@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+xmin -185.0;
+xmax -105.0;
+ymin -185.0;
+ymax -135.0;
+zmin -265.0;
+zmax -190.0;
+
+//xcells 300;
+//ycells 220;
+//zcells 50;
+
+lx #calc "$xmax - $xmin";
+dx 1;
+xcells #calc "abs($lx/$dx)";
+
+ly #calc "$ymax - $ymin";
+dy 1;
+ycells #calc "abs($ly/$dy)";
+
+lz #calc "$zmax - $zmin";
+dz 1;
+zcells #calc "abs($lz/$dz)";
+
+vertices        
+(
+    ($xmin  $ymin  $zmin)   // vertex number 0
+    ($xmax  $ymin  $zmin)   // vertex number 1
+    ($xmax  $ymax  $zmin)   // vertex number 2
+    ($xmin  $ymax  $zmin)   // vertex number 3
+    ($xmin  $ymin  $zmax)   // vertex number 4
+    ($xmax  $ymin  $zmax)   // vertex number 5
+    ($xmax  $ymax  $zmax)   // vertex number 6
+    ($xmin  $ymax  $zmax)   // vertex number 7
+);
+
+blocks          
+(
+    hex (0 1 2 3 4 5 6 7)      // vertex numbers
+    ($xcells $ycells $zcells)  // number of cells in each direction
+    simpleGrading (1 2 3)    // cell expansion ratios
+);
+
+edges           
+(
+);
+
+patches         
+(
+    patch minX
+    (
+        (0 4 7 3)
+    )
+    patch maxX
+    (
+        (2 6 5 1)
+    )
+    patch minY
+    (
+        (1 5 4 0)
+    )
+    patch maxY 
+    (
+        (3 7 6 2)
+    )
+    patch minZ
+    (
+        (0 3 2 1)
+    )
+    patch maxZ
+    (
+        (4 5 6 7)
+    )
+);
+
+mergePatchPairs 
+(
+);
+
+// ************************************************************************* //
