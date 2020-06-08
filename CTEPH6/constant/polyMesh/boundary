@@ -19,31 +19,31 @@ FoamFile
 (
     wall
     {
-        type            patch;
-        physicalType    patch;
-        nFaces          12222;
-        startFace       216617;
+        type            wall;
+        //physicalType    patch;
+        nFaces          48888;
+        startFace       1649636;
     }
     inlet
     {
         type            patch;
         physicalType    patch;
-        nFaces          600;
-        startFace       228839;
+        nFaces          2400;
+        startFace       1698524;
     }
     LMPA
     {
         type            patch;
         physicalType    patch;
-        nFaces          358;
-        startFace       229439;
+        nFaces          1432;
+        startFace       1700924;
     }
     RMPA
     {
         type            patch;
         physicalType    patch;
-        nFaces          370;
-        startFace       229797;
+        nFaces          1480;
+        startFace       1702356;
     }
 )
 
