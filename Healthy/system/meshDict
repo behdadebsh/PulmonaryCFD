@@ -1,0 +1,185 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                |
+| \\      /  F ield         | cfMesh: A library for mesh generation          |
+|  \\    /   O peration     |                                                |
+|   \\  /    A nd           | Author: Franjo Juretic                         |
+|    \\/     M anipulation  | E-mail: franjo.juretic@c-fields.com            |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      meshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+maxCellSize     0.0005;
+
+surfaceFile     "output.stl";
+
+renameBoundary
+{
+    newPatchNames
+    {
+        patch0 { newName inlet; type patch;}
+        patch1 { newName LMPA; type patch;}
+        patch2 { newName RMPA; type patch;}
+        patch3 { newName wall; type wall;}
+    }
+    defaultName walls;
+    defaultType wall;
+}
+
+surfaceMeshRefinement
+{
+    /*"Wall"
+    {
+	surfaceFile     "regionSTL.stl";
+        cellSize 0.0005;
+    } */
+
+    /*"TDWall"
+    {
+	surfaceFile     "regionSTL.stl";
+        cellSize 0.00005;
+    } */
+}
+
+localRefinement
+{
+    //"Wall"
+    //{
+    //    cellSize 0.0003;
+    //    refinementThickness 0.0005;
+    //}
+    /*"DeviceInlet"
+    {
+        cellSize 0.00005;
+        //refinementThickness 0.01;
+    }*/
+   // patch1
+    //{
+    //    cellSize 0.05;
+//	refinementThickness 0.1;
+  //  } 
+
+    /*"TDWall"
+    {
+        cellSize 0.00005;
+    } */
+}
+
+//objectRefinements
+//{
+   // TDrefinement
+   // {
+       // type     sphere;
+     //   cellSize 0.0001;
+   //     centre   (0.0393 0.0579 -0.0022);
+  //      radius   0.0014;
+        //refinementThickness 0.0001;
+ //   }
+//}
+
+boundaryLayers
+{
+    //nLayers         3;
+    //thicknessRatio  1.2;
+    patchBoundaryLayers
+    {
+         patch3
+         {
+            nLayers           4;
+
+            thicknessRatio    1.3;
+
+            maxFirstLayerThickness 0.002;
+
+            allowDiscontinuity 1;             
+         }
+
+         //"TDWall"
+         //{
+         //   nLayers           3;
+
+         //   thicknessRatio    1;
+
+         //   maxFirstLayerThickness 0.00002;
+
+         //   allowDiscontinuity 1;             
+         //}
+    }
+    optimiseLayer 1;
+    
+    /*optimisationParameters
+    {
+        //number of iterations in the procedure
+        //for reducing normal variation (optional)
+        nSmoothNormals 100;
+
+        //maximum number of iterations
+        //of the whole procedure (optional)
+        maxNumIterations 150;
+
+        //Ratio between the max layer thickness 
+        //and the estimated feature size (optional)
+        featureSizeFactor 0.001;
+
+        //activate 1 or deactivate 0 calcuation
+        //of normal (optional)
+        reCalculateNormals 1;
+
+        //activate 1 or deactivate 0 calcuation
+        //of normal (optional)
+        relThicknessTol 0.01;
+    }*/
+}
+
+//renameBoundary
+//{
+    //defaultName     Wall;
+  //  defaultType     Wall;
+//
+   // newPatchNames
+   // {
+      //  "LeftInlet"
+      //  {
+      //      type    patch;
+    //        newName LeftInlet;
+  //      }
+//
+      //  "TDInlet"
+      //  {
+         //   type    patch;
+        //    newName TDInlet;
+       // }
+
+     //   "LeftJInlet"
+      //  {
+    //        type    patch;
+  //          newName LeftJInlet;
+    //    }
+//
+  //      "RightInlet"
+   //     {
+  //          type    patch;
+ //           newName RightInlet;
+//        }
+//	
+//	"Outlet"
+  //      {
+  //          type    patch;
+ //           newName Outlet;
+ //       }
+ //   }
+//}
+
+meshQualitySettings
+{
+    maxNonOrthogonality 60;
+}
+// ************************************************************************* //
